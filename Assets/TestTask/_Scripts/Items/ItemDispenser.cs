@@ -15,9 +15,10 @@ namespace TestTask._Scripts.Items
         
         public void AddRandomItem()
         {
-            var randomWeapon = _weaponItems[new Random().Next(_weaponItems.Length)];
             var randomHeads = _armorItems.Where(armor => armor.ArmorPart == ArmorPart.HEAD).ToList();
             var randomBodies = _armorItems.Where(armor => armor.ArmorPart == ArmorPart.BODY).ToList();
+            
+            var randomWeapon = _weaponItems[new Random().Next(_weaponItems.Length)];
             var randomHead = randomHeads[new Random().Next(0, randomHeads.Count)];
             var randomBody = randomBodies[new Random().Next(0, randomBodies.Count)];
             

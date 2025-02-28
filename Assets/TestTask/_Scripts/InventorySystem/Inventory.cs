@@ -15,7 +15,7 @@ namespace TestTask._Scripts.InventorySystem
         
         private void OnEnable()
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             _slots = new Slot[_maxInventory];
             for (int i = 0; i < _availableInventory; i++)
             {
@@ -27,7 +27,7 @@ namespace TestTask._Scripts.InventorySystem
         
         public void UnlockLastSlot()
         {
-            if(_availableInventory <= _maxInventory -1)
+            if(_availableInventory <= _maxInventory - 1)
                 _slots[_availableInventory++].Unlock();
             else
                 Debug.Log("Available inventory size is equal to max inventory size");
@@ -35,28 +35,43 @@ namespace TestTask._Scripts.InventorySystem
 
         public void TryAddItem(InventoryItem item)
         {
-            var allSameSlots = _slots.Where(slot => slot.GetItem().Item == item.Item).ToList();
-            ushort resultValue = 0;
-            
-            foreach (var slot in allSameSlots)
-            {
-                resultValue = slot.TryAddItem(item);
-                if (resultValue == 0)
-                    return;
-            }
-            
-            var emptySlot = _slots.FirstOrDefault(slot => slot.IsEmpty && !slot.IsLocked);
-            if (emptySlot != null)
-            {
-                emptySlot.AddNewItem(item);
+            var result = TryAddExistingItem(item);
+            if (result == 0 || TryAddNewItem(item))
                 return;
-            }
-
-            Debug.Log(resultValue == 0
+            
+            Debug.Log(result == -1
                 ? $"There is no space for {item.Item.Name}"
-                : $"Cant add more this {item.Item.Name} current remainder is {resultValue}");
+                : $"Cant add more this {item.Item.Name} current remainder is {result}");
         }
 
+        /// <summary>
+        /// Method for trying to add item that exists in inventory
+        /// </summary>
+        /// <param name="item">Item that can exists in inventory</param>
+        /// <returns>Count of remaining items. Return -1 if the item is not in the inventory</returns>
+        private int TryAddExistingItem(InventoryItem item)
+        {
+            short resultValue = -1;
+            var allSameSlots = _slots.Where(slot => slot.GetItem().Item == item.Item).ToList();
+            foreach (var slot in allSameSlots)
+            {
+                resultValue = (short)slot.TryAddItem(item);
+                if (resultValue == 0)
+                    return 0;
+            }
+
+            return resultValue;
+        }
+
+        private bool TryAddNewItem(InventoryItem item)
+        {
+            var emptySlot = _slots.FirstOrDefault(slot => slot.IsEmpty && !slot.IsLocked);
+            if (emptySlot == null) return false;
+            emptySlot.AddNewItem(item);
+            return true;
+
+        }
+        
         public void TryRemoveRandomItem()
         {
             var notEmptySlots = _slots.Where(slot => !slot.IsEmpty).ToList();
@@ -70,16 +85,17 @@ namespace TestTask._Scripts.InventorySystem
             }
         }
 
-        public void TryShoot()
+        /*
+        public void Shoot()
         {
-            var weaponList = TryGetAllWeapon();
+            var weaponList = GetAllWeapon();
             if (weaponList.Count == 0)
             {
                 Debug.Log("Pew, pew. You shot from your finger. Because you have no any weapon");
                 return;
             }
 
-            var ammoList = TryGetAllAmmo();
+            var ammoList = GetAllAmmo();
             if (ammoList.Count == 0)
             {
                 Debug.Log("CLICK, CLICK. You have no ammo");
@@ -98,28 +114,47 @@ namespace TestTask._Scripts.InventorySystem
             ammoList.FirstOrDefault(ammo =>
                     ((WeaponItem)weaponWithAmmo[randomIndex].Item).Ammo == ammo.Item).RemoveCount(1);
         }
-        
+
+        */
         public void Shoot()
         {
-            TryShoot();
-        }
+            var weaponSlots = GetAllWeaponSlots();
+            if (weaponSlots.Count == 0)
+            {
+                Debug.Log("Pew, pew. You shot from your finger. Because you have no any weapon");
+                return;
+            }
 
-        private List<InventoryItem> TryGetAllWeapon()
-        {
-            var slots = _slots.Where(slot => slot.ItemType == ItemType.WEAPON).ToList();
-
-            return slots.Select(slot => slot.GetItem()).ToList();
+            var ammoSlots = GetAllAmmoSlots();
+            if (ammoSlots.Count == 0)
+            {
+                Debug.Log("CLICK, CLICK. You have no ammo");
+                return;
+            }
+            
+            var weaponWithAmmo = new List<Slot>();
+            foreach (var ammo in ammoSlots)
+            {
+                var wep = weaponSlots.FirstOrDefault(weapon => ((WeaponItem)weapon.GetItem().Item).Ammo == ammo.GetItem().Item);
+                if(wep != null)
+                    weaponWithAmmo.Add(wep);
+            }
+            
+            int randomIndex = new Random().Next(weaponWithAmmo.Count);
+            ammoSlots.FirstOrDefault(ammo =>
+                ((WeaponItem)weaponWithAmmo[randomIndex].GetItem().Item).Ammo == ammo.GetItem().Item).RemoveItem(1);
         }
         
-        private List<InventoryItem> TryGetAllAmmo()
+        private List<Slot> GetAllWeaponSlots()
         {
-            var slots = _slots.Where(slot => slot.ItemType == ItemType.AMMO).ToList();
-
-            return slots.Select(slot => slot.GetItem()).ToList();
+            return _slots.Where(slot => !slot.IsEmpty && slot.ItemType == ItemType.WEAPON).Distinct().ToList();
         }
-        /*
-         * Load availableInventory, and slots with info about they
-         */
+        
+        private List<Slot> GetAllAmmoSlots()
+        {
+            return _slots.Where(slot => !slot.IsEmpty && slot.ItemType == ItemType.AMMO).Distinct().ToList();
+        }
+        
     }
 
     [Serializable]
@@ -130,22 +165,20 @@ namespace TestTask._Scripts.InventorySystem
         public bool IsLocked => _isLocked;
         public bool IsEmpty => _item.Item == null;
         public ItemType ItemType => _item.Item.ItemType;
+        
         public void Unlock()
         {
             if (_isLocked)
                 _isLocked = false;
         }
-
         public void AddNewItem(InventoryItem item)
         {
             _item = item;
         }
-        
         public ushort TryAddItem(InventoryItem item)
         {
             return _item.AddItem(item.Count);
         }
-
         public bool TryRemoveItem()
         {
             if(IsEmpty)
@@ -153,9 +186,13 @@ namespace TestTask._Scripts.InventorySystem
             _item.RemoveItem();
             return true;
         }
-        
+        public void RemoveItem(ushort count)
+        {
+            _item.RemoveCount(count);
+            if (_item.Count == 0)
+                TryRemoveItem();
+        }
         //Добавить удаление предмета если его количество равно 0
-        
         public InventoryItem GetItem() => _item;
     }
 }

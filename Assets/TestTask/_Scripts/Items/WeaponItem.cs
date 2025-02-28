@@ -10,7 +10,5 @@ namespace TestTask._Scripts.Items
         [SerializeField] private float _damage;
 
         public AmmoItem Ammo => _ammo;
-
-        public float Damage => _damage;
     }
 }

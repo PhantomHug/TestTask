@@ -8,7 +8,6 @@ namespace TestTask._Scripts.UI
     {
         [SerializeField] private Inventory _inventory;
         [SerializeField] private ItemDispenser _dispenser;
-        [SerializeField] private Weapon _weapon;
         
         public void Shoot()
         {
