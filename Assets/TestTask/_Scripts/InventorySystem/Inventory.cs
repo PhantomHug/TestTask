@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TestTask._Scripts.DataPersistenceSystem;
 using TestTask._Scripts.Items;
 using UnityEngine;
 using Random = System.Random;
 
 namespace TestTask._Scripts.InventorySystem
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, IDataPersistence
     {
         [SerializeField] private int _maxInventory;
         [SerializeField] private int _availableInventory;
@@ -15,14 +16,15 @@ namespace TestTask._Scripts.InventorySystem
         
         private void OnEnable()
         {
-#if UNITY_EDITOR
+            
+/*#if UNITY_EDITOR
             _slots = new Slot[_maxInventory];
             for (int i = 0; i < _availableInventory; i++)
             {
                 _slots[i] = new Slot();
                 _slots[i].Unlock();
             }      
-#endif
+#endif*/
         }
         
         public void UnlockLastSlot()
@@ -84,38 +86,7 @@ namespace TestTask._Scripts.InventorySystem
                 Debug.Log("Cant remove item. Inventory is empty");
             }
         }
-
-        /*
-        public void Shoot()
-        {
-            var weaponList = GetAllWeapon();
-            if (weaponList.Count == 0)
-            {
-                Debug.Log("Pew, pew. You shot from your finger. Because you have no any weapon");
-                return;
-            }
-
-            var ammoList = GetAllAmmo();
-            if (ammoList.Count == 0)
-            {
-                Debug.Log("CLICK, CLICK. You have no ammo");
-                return;
-            }
-            
-            var weaponWithAmmo = new List<InventoryItem>();
-            foreach (var ammo in ammoList)
-            {
-                var wep = weaponList.FirstOrDefault(weapon => ((WeaponItem)weapon.Item).Ammo == ammo.Item);
-                if(wep != null)
-                    weaponWithAmmo.Add(wep);
-            }
-
-            int randomIndex = new Random().Next(weaponWithAmmo.Count);
-            ammoList.FirstOrDefault(ammo =>
-                    ((WeaponItem)weaponWithAmmo[randomIndex].Item).Ammo == ammo.Item).RemoveCount(1);
-        }
-
-        */
+        
         public void Shoot()
         {
             var weaponSlots = GetAllWeaponSlots();
@@ -154,14 +125,33 @@ namespace TestTask._Scripts.InventorySystem
         {
             return _slots.Where(slot => !slot.IsEmpty && slot.ItemType == ItemType.AMMO).Distinct().ToList();
         }
+
+        public void Load(GameSaveData persistence)
+        {
+            _maxInventory = persistence.maxInventory;
+            _availableInventory = persistence.availableInventory;
+            _slots = new Slot[_maxInventory];
+            Array.Copy(persistence.slots, _slots, persistence.slots.Length);
+            for (int i = persistence.slots.Length; i < _slots.Length; i++)
+                _slots[i] = new Slot();
+        }
         
+        public void Save(ref GameSaveData persistence)
+        {
+            var notEmptySlots = _slots.Where(slot => !slot.IsEmpty).ToArray();
+            persistence.slots = notEmptySlots;
+            persistence.maxInventory = _maxInventory;
+            persistence.availableInventory = _availableInventory;
+        }
     }
 
     [Serializable]
     public class Slot
     {
-        [SerializeField] private bool _isLocked = true;
-        [SerializeField] private InventoryItem _item;
+        [SerializeField]
+        private bool _isLocked = true;
+        [SerializeField]
+        private InventoryItem _item;
         public bool IsLocked => _isLocked;
         public bool IsEmpty => _item.Item == null;
         public ItemType ItemType => _item.Item.ItemType;

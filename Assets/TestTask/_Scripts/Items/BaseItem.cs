@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace TestTask._Scripts.Items
 {
-    [CreateAssetMenu(fileName = "Item", menuName = "Items/Create new item", order = 0)]
     public abstract class BaseItem : ScriptableObject
     {
         [SerializeField] private ItemType _itemType;
@@ -22,7 +21,7 @@ namespace TestTask._Scripts.Items
 
     public enum ItemType
     {
-        BASE = 0,
+        EMPTY = 0,
         AMMO = 1,
         WEAPON = 2,
         ARMOR = 3,

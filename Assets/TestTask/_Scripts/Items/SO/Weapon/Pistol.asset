@@ -17,5 +17,5 @@ MonoBehaviour:
   _name: Pistol
   _maxCount: 1
   _weightOneItem: 1
-  _ammo: {fileID: 0}
+  _ammo: {fileID: 11400000, guid: f28129e60786ab54ab2a084e57e16478, type: 2}
   _damage: 10
