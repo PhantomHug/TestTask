@@ -53,6 +53,7 @@ SpriteAtlas:
     - {fileID: 21300000, guid: dff614c42081c3f498c0869eecbbecdd, type: 3}
     - {fileID: 21300000, guid: ed48cdf22b400ac419d964ff51270fb4, type: 3}
     - {fileID: 21300000, guid: a96335f2947b1224db76a878f6178fd8, type: 3}
+    - {fileID: 2800000, guid: 61b7efc852fb0d54c9a9590a6c73b11d, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -62,6 +63,7 @@ SpriteAtlas:
     - 7e310d334a512994884fa83b3098e3b3: 21300000
     - 7a2b11c3573890e41bb9d464622a76a4: 21300000
     - dff614c42081c3f498c0869eecbbecdd: 21300000
+    - 61b7efc852fb0d54c9a9590a6c73b11d: 21300000
     - f669245bd85692944b9c3a1ad812cfa0: 21300000
     - 67bd65ce79489034ba82022e27d09b0f: 21300000
     - e6b0a94fcb666864691b0cfa330a6453: 21300000
@@ -72,6 +74,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7e310d334a512994884fa83b3098e3b3, type: 3}
   - {fileID: 21300000, guid: 7a2b11c3573890e41bb9d464622a76a4, type: 3}
   - {fileID: 21300000, guid: dff614c42081c3f498c0869eecbbecdd, type: 3}
+  - {fileID: 21300000, guid: 61b7efc852fb0d54c9a9590a6c73b11d, type: 3}
   - {fileID: 21300000, guid: f669245bd85692944b9c3a1ad812cfa0, type: 3}
   - {fileID: 21300000, guid: 67bd65ce79489034ba82022e27d09b0f, type: 3}
   - {fileID: 21300000, guid: e6b0a94fcb666864691b0cfa330a6453, type: 3}
@@ -81,6 +84,7 @@ SpriteAtlas:
   - Bulletproof
   - Jacket
   - MachineGunBullet
+  - Lock
   - Helmet
   - MachineGun
   - Cap
