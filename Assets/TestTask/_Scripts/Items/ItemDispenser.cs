@@ -1,24 +1,56 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TestTask._Scripts.InventorySystem;
 using UnityEngine;
 using Random = System.Random;
 
 namespace TestTask._Scripts.Items
 {
+    //TODO: add load items using resources
     public class ItemDispenser : MonoBehaviour
     {
         [SerializeField] private Inventory _inventory;
-        
-        [SerializeField] private AmmoItem[] _ammoItems;
-        [SerializeField] private ArmorItem[] _armorItems;
-        [SerializeField] private WeaponItem[] _weaponItems;
+        [SerializeField] private string _storePath;
+
+        private List<AmmoItem> _ammoItems;
+        private List<ArmorItem> _armorItems;
+        private List<WeaponItem> _weaponItems;
+
+        private void OnEnable()
+        {
+            LoadAllItemTypes();
+        }
+
+        private void LoadAllItemTypes()
+        {
+            var items = Resources.LoadAll<BaseItem>(_storePath);
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case AmmoItem ammoItem:
+                        _ammoItems.Add(ammoItem);
+                        break;
+                    case ArmorItem armorItem:
+                        _armorItems.Add(armorItem);
+                        break;
+                    case WeaponItem weaponItem:
+                        _weaponItems.Add(weaponItem);
+                        break;
+                    default:
+                        Debug.LogError($"Item {item.name} has not been implemented. Add list in ItemDispenser");
+                        break;
+                }
+            }
+        }
         
         public void AddRandomItem()
         {
             var randomHeads = _armorItems.Where(armor => armor.ArmorPart == ArmorPart.HEAD).ToList();
             var randomBodies = _armorItems.Where(armor => armor.ArmorPart == ArmorPart.BODY).ToList();
             
-            var randomWeapon = _weaponItems[new Random().Next(_weaponItems.Length)];
+            var randomWeapon = _weaponItems[new Random().Next(_weaponItems.Count)];
             var randomHead = randomHeads[new Random().Next(0, randomHeads.Count)];
             var randomBody = randomBodies[new Random().Next(0, randomBodies.Count)];
             
