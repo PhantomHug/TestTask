@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35ba2fdb26049eea9027489dccaaac4, type: 3}
+  m_Name: PistolAmmo
+  m_EditorClassIdentifier: 
+  _itemType: 1
+  _icon: {fileID: 21300000, guid: a96335f2947b1224db76a878f6178fd8, type: 3}
+  _name: PistoletBullet
+  _maxCount: 100
+  _weightOneItem: 0.1
