@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace TestTask._Scripts.InventorySystem
 {
-    //TODO: добавить ограничение на _count. Он не может быть больше чем _item.MaxCount;
     [Serializable]
     public class InventoryItem
     {

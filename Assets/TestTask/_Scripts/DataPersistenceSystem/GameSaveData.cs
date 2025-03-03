@@ -10,8 +10,8 @@ namespace TestTask._Scripts.DataPersistenceSystem
 
         public void SetBasicValue()
         {
-            maxInventory = 20;
-            availableInventory = 10;
+            maxInventory = 30;
+            availableInventory = 15;
             slots = new Slot[maxInventory];
         }
         

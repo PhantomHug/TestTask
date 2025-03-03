@@ -26,7 +26,7 @@ namespace TestTask._Scripts.UI
 
         public void RemoveRandomItem()
         {
-            _inventory.TryRemoveRandomItem();
+            _inventory.RemoveRandomItem();
         }
 
         public void UnlockInventorySlot()

@@ -13,6 +13,7 @@ namespace TestTask._Scripts.Items
         [SerializeField] private ushort _maxCount;
         [SerializeField] private float _weightOneItem;
 
+        public Sprite Icon => _icon;
         public string Name => _name;
         public ushort MaxCount => _maxCount;
         public float WeightOneItem => _weightOneItem;
@@ -21,7 +22,6 @@ namespace TestTask._Scripts.Items
 
     public enum ItemType
     {
-        EMPTY = 0,
         AMMO = 1,
         WEAPON = 2,
         ARMOR = 3,
