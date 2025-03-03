@@ -10,14 +10,15 @@ namespace TestTask._Scripts.InventorySystem
 {
     public class Inventory : MonoBehaviour, IDataPersistence
     {
-        [Header("")]
+        [Header("Inventory settings")]
         [Space(5)]
-        [SerializeField] private int _maxInventory;
-        [SerializeField] private int _availableInventory;
+        [Range(0, 100)] [SerializeField] private int _maxInventory;
+        [Range(0, 100)] [SerializeField] private int _availableInventory;
         [SerializeField] private Slot[] _slots;
         
         [Header("Temporary data for unlock slots")]
         [Space(5)]
+        
         [SerializeField] private float _money = 99999;
         
         [Header("Data persistence settings")]
