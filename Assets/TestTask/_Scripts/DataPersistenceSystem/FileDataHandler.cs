@@ -6,8 +6,9 @@ namespace TestTask._Scripts.DataPersistenceSystem
 {
     public class FileDataHandler
     {
-        private string _dirPath;
-        private string _fileName;
+        private readonly string _dirPath;
+        private readonly string _fileName;
+        
         private string path => Path.Combine(_dirPath, _fileName);
         
         public FileDataHandler(string dirPath, string fileName)
@@ -29,6 +30,7 @@ namespace TestTask._Scripts.DataPersistenceSystem
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    Debug.Log("Stop playing and start again. IT WILL REFRESH SAVED DATA TO BASIC");
                 }
             }
             return gameSaveData;
