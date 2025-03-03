@@ -24,6 +24,9 @@ namespace TestTask._Scripts.Items
 
         private void LoadAllItemTypes()
         {
+            _ammoItems = new List<AmmoItem>();
+            _armorItems = new List<ArmorItem>();
+            _weaponItems = new List<WeaponItem>();
             var items = Resources.LoadAll<BaseItem>(_storePath);
             foreach (var item in items)
             {
