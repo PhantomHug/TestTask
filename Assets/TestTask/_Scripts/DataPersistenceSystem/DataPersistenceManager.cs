@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace TestTask._Scripts.DataPersistenceSystem
@@ -18,8 +19,16 @@ namespace TestTask._Scripts.DataPersistenceSystem
         
         private void Awake()
         {
-            if(_instance != null)
-                Debug.LogError("Only one instance of DataPersistenceManager is allowed.");
+            if (_instance != null)
+            {
+                var managers = FindObjectsOfType<DataPersistenceManager>();
+                
+                var managersName = new StringBuilder();
+                foreach (var manager in managers)
+                    managersName.Append(manager.gameObject.name + ", ");
+                Debug.LogError($"Only one instance of DataPersistenceManager is allowed. Names of managers: {managersName}");
+            }
+
             _instance = this;
             
             if(string.IsNullOrEmpty(_path)) _path = Application.persistentDataPath;
@@ -40,9 +49,10 @@ namespace TestTask._Scripts.DataPersistenceSystem
         private void NewGame()
         {
             _gameSaveData = new GameSaveData();
+            _gameSaveData.SetBasicValue();
         }
 
-        public void Load()
+        private void Load()
         {
             _gameSaveData = _fileDataHandler.LoadGameSaveData();
             if(_gameSaveData == null)
@@ -53,7 +63,7 @@ namespace TestTask._Scripts.DataPersistenceSystem
             } 
         }
 
-        public void Save()
+        private void Save()
         {
             foreach (var persistence in _persistenceList)
             {
